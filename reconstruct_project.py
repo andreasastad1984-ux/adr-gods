@@ -2,10 +2,9 @@ from pathlib import Path
 import shutil
 
 root = Path(".")
+
 files = {
-    "settings.gradle.kts": "settings.gradle.kts",
     "root_build.gradle.kts": "build.gradle.kts",
-    "gradle.properties": "gradle.properties",
     "app_build.gradle.kts": "app/build.gradle.kts",
     "app_proguard-rules.pro": "app/proguard-rules.pro",
     "app_AndroidManifest.xml": "app/src/main/AndroidManifest.xml",
@@ -21,16 +20,41 @@ files = {
     "res_mipmap_anydpi_v26_ic_launcher.xml": "app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml",
     "res_mipmap_anydpi_v26_ic_launcher_round.xml": "app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml",
 }
+
 for flat, dest_rel in files.items():
     src = root / flat
     dest = root / dest_rel
+    if not src.exists():
+        print(f"Skipping missing file: {flat}")
+        continue
     dest.parent.mkdir(parents=True, exist_ok=True)
+    if src.resolve() == dest.resolve():
+        print(f"Skipping self-copy: {flat}")
+        continue
     shutil.copy2(src, dest)
 
-for dens in ["mdpi","hdpi","xhdpi","xxhdpi","xxxhdpi"]:
-    for kind_flat, kind_dest in [("ic_launcher","ic_launcher.png"), ("ic_launcher_round","ic_launcher_round.png")]:
+for dens in ["mdpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi"]:
+    for kind_flat, kind_dest in [
+        ("ic_launcher", "ic_launcher.png"),
+        ("ic_launcher_round", "ic_launcher_round.png"),
+    ]:
         src = root / f"mipmap_{dens}_{kind_flat}.png"
         dest = root / f"app/src/main/res/mipmap-{dens}/{kind_dest}"
+        if not src.exists():
+            print(f"Skipping missing icon: {src.name}")
+            continue
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, dest)
+
+# Sørg for at disse finnes i riktig plass
+if (root / "settings.gradle.kts").exists():
+    print("settings.gradle.kts finnes allerede i rota")
+else:
+    print("ADVARSEL: settings.gradle.kts mangler i repo-rota")
+
+if (root / "gradle.properties").exists():
+    print("gradle.properties finnes allerede i rota")
+else:
+    print("ADVARSEL: gradle.properties mangler i repo-rota")
+
 print("Project reconstructed.")
