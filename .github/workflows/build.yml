@@ -24,22 +24,16 @@ jobs:
 
       - name: Reconstruct Android project
         run: python3 reconstruct_project.py
-          
-          
 
       - name: Build debug APK
-      run: gradle assembleDebug --stacktrace
-       
-      
+        run: gradle assembleDebug --stacktrace
+
       - name: Show APK files
-      run: |
-        find . -iname "*.apk" | sort 
-     
-           
-          
+        run: |
+          find . -iname "*.apk" | sort
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: ADR-Gods-APK
-          path: '**/*.apk'
+          path: '**/*.apk' 
