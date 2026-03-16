@@ -28,9 +28,15 @@ jobs:
           
 
       - name: Build debug APK
-        run: | 
-          chmod +x gradlew 
-          ./gradlew assembleDebug
+      run: gradle assembleDebug --stacktrace
+       
+      
+      - name: Show APK files
+      run: |
+        find . -iname "*.apk" | sort 
+     
+           
+          
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
