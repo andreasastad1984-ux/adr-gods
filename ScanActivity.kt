@@ -48,9 +48,11 @@ class ScanActivity : AppCompatActivity() {
         cameraProviderFuture.addListener({
             val cameraProvider = cameraProviderFuture.get()
 
-            val preview = androidx.camera.core.Preview.Builder().build().also {
-                it.surfaceProvider = previewView.surfaceProvider
-            }
+            val preview = androidx.camera.core.Preview.Builder().build()
+                 preview.setSurfaceProvider(previewView.surfaceProvider)
+              
+                
+            
 
             val analysis = ImageAnalysis.Builder()
                 .setTargetResolution(Size(1280, 720))
